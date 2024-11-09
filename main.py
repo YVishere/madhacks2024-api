@@ -1,10 +1,19 @@
 from fastapi import FastAPI
 import time
 from Scraper import startScraping
+from fastapi.middleware.cors import CORSMiddleware
 
 import uvicorn
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/scrape")
 async def scrape_view(subject: str):
