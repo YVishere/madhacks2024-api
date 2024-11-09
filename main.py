@@ -7,9 +7,9 @@ import uvicorn
 app = FastAPI()
 
 @app.get("/scrape")
-async def scrape_view(subject: str, result: str, fastScrape: bool = False):
+async def scrape_view(subject: str):
     start_time = time.time()
-    scraped_data = await startScraping(subject, result, fastScrape)
+    scraped_data = await startScraping(subject)
     time_taken = time.time() - start_time
 
     return {'subject': subject, 'result': result, 'time_taken': time_taken, 'data': scraped_data}
