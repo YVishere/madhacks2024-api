@@ -12,7 +12,7 @@ async def scrape_view(subject: str):
     scraped_data = await startScraping(subject)
     time_taken = time.time() - start_time
 
-    return {'subject': subject, 'result': result, 'time_taken': time_taken, 'data': scraped_data}
+    return {'subject': subject, 'time_taken': time_taken, 'data': scraped_data}
 
 @app.get("/")
 def home_view():
