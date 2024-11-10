@@ -1,7 +1,7 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 import time
 from Scraper import startScraping
-from post_data import post_dataMain
+# from post_data import post_dataMain
 from fastapi.middleware.cors import CORSMiddleware
 # from bson import ObjectId
 import AI_API as ai
@@ -55,7 +55,7 @@ async def scrape_view(subject: str):
 #         await delete_data(ObjectId(document_id))
 
 @app.get("/prompt")
-async def prompt_view(x: str):
+async def prompt_view_init(x: str):
     x = "Tell me everything you know about " + x + " in 500 words."
     try:
         response = ai.input_prompt(x)
@@ -68,11 +68,24 @@ async def prompt_view(x: str):
 def home_view():
     return "Hello world"
 
+@app.get("/conv")
+async def conv_view(n: str):
+    newsFlag = ["news", "article", "articles", "newspaper", "newspapers", "headlines", "headline", "news headlines", "news headline", "news articles", "news article", "news paper", "news papers"]
+    for flag in newsFlag:
+        if flag in n:
+            return news_view(n)
+    try:
+        response = await ai.news_handler(n)
+    except Exception as e:
+        return {"error": str(e)}
+    
+    return {'response': response}
+
 @app.get("/news")
 async def news_view(n: str):
     try:
         start_time = time.time()
-        scraped_data = await startScrapingNews(n)
+        scraped_data = await ai.news_handler(n)
         time_taken = time.time() - start_time
     except Exception as e:
         return {"error": str(e)}

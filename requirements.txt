@@ -6,3 +6,4 @@ numpy
 pymongo
 motor
 google-generativeai
+selenium

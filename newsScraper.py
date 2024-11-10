@@ -1,22 +1,36 @@
+import asyncio
+from selenium import webdriver
 from bs4 import BeautifulSoup
-import httpx
-import numpy as np
 
-async def algorithm(subject):
+async def algorithm(subject, sub):
     toRet = []
-    async with httpx.AsyncClient() as client:
-        try:
-            response = await client.get(subject)
-            soup = BeautifulSoup(response.text, "html.parser")
-            sites = soup.find_all("a", href=True)
-            for s in sites:
-                nresp = await client.get(s['href'])
-                nsoup = BeautifulSoup(fix_url2(nresp.text), "html.parser")
-                ns = nsoup.find_all("h1")
-                toRet = toRet.append(ns)
-            return toRet
-        except AttributeError:
-            return toRet
+    loop = asyncio.get_event_loop()
+    
+    # Initialize the WebDriver
+    driver = webdriver.Chrome()
+
+    try:
+        # Run the synchronous driver.get() in an executor
+        await loop.run_in_executor(None, driver.get, subject)
+        
+        # Parse the page source with BeautifulSoup
+        soup = BeautifulSoup(driver.page_source, "html.parser")
+        
+        # Close the WebDriver
+        driver.close()
+        
+        # Find headlines
+        headlines = soup.find_all('a', href=True)
+        for head in headlines:
+            headline = head.get_text()
+            if sub.lower() in headline.lower():
+                toRet.append(headline)
+
+        return toRet
+    except AttributeError:
+        return toRet
+    finally:
+        driver.quit()  # Ensure the driver is quit in case of an exception
 
 def fix_url(st1):
     st1 = st1
@@ -49,12 +63,14 @@ async def startScrapingNews(subject):
 
     print("Start scraping", subject)
 
+    subject = subject.strip()
+
     n = subject.find(' ')
     if not n == -1:
-        subject = fix_url(subject)
+        subject = fix_url2(subject)
     
-    url = "news.google.com/search?q=" + subject
+    url = "https://news.google.com/search?q=" + subject
 
-    toRet = await algorithm(url)
+    toRet = await algorithm(url, subject)
 
     return toRet
