@@ -56,7 +56,7 @@ async def websocket_endpoint_with_id(websocket: WebSocket, document_id: str):
 async def prompt_view(x: str):
     x = x + " talk about this topic for about 500 words"
     try:
-        response = ai.input_prompt(x)
+        response = await ai.input_prompt(x)
     except Exception as e:
         return {"error": str(e)}
     
