@@ -3,4 +3,7 @@ uvicorn
 httpx
 beautifulsoup4
 numpy
+pymongo
+motor
+bson
 google-generativeai
