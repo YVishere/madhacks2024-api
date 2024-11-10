@@ -51,3 +51,32 @@ def fix_url(st1):
             continue
         st2 = st2 + st1[i:i + 1]
     return st2
+
+# def process_text(text):
+#     text = text.replace("\n", " ")
+#     text = text.replace("  ", " ")
+#     text = text.replace("\\\"", "\"")
+#     text = text.replace("ⓘ", "")
+#     text = text.replace("( )", "")
+#     text = text.replace("()", "")
+
+#     #Get rid of square brackets and anything inside them
+#     text = re.sub(r'\[.*?\]', '', text)
+#     text = ' '.join(text.split())
+#     return text
+
+async def startScrapingNews(subject):
+
+    print("Start scraping", subject)
+
+    subject = subject.strip()
+
+    n = subject.find(' ')
+    if not n == -1:
+        subject = fix_url(subject)
+    
+    url = "https://news.google.com/search?q=" + subject
+
+    toRet = await algorithm(url, subject)
+
+    return toRet
