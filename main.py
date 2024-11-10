@@ -1,9 +1,9 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 import time
 from Scraper import startScraping
-# from post_data import post_dataMain, delete_data
+from post_data import post_dataMain
 from fastapi.middleware.cors import CORSMiddleware
-from bson import ObjectId
+# from bson import ObjectId
 import AI_API as ai
 
 app = FastAPI()
@@ -24,11 +24,11 @@ async def scrape_view(subject: str):
         time_taken = time.time() - start_time
 
         # # Post data to MongoDB
-        # document_id = await post_dataMain(subject, scraped_data)
+        document_id = await post_dataMain(subject, scraped_data)
     except Exception as e:
         return {"error": str(e)}
 
-    return {'subject': subject, 'time_taken': time_taken, 'data': scraped_data}
+    return {'subject': subject, 'time_taken': time_taken, 'data': scraped_data, 'document_id': str(document_id)}
 
 # @app.websocket("/ws")
 # async def websocket_endpoint(websocket: WebSocket):
