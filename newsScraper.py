@@ -11,7 +11,7 @@ async def algorithm(subject):
             sites = soup.find_all("a", href=True)
             for s in sites:
                 nresp = await client.get(s['href'])
-                nsoup = BeautifulSoup(nresp.text, "html.parser")
+                nsoup = BeautifulSoup(fix_url2(nresp.text), "html.parser")
                 ns = nsoup.find_all("h1")
                 toRet = toRet.append(ns)
             return toRet
@@ -26,6 +26,10 @@ def fix_url(st1):
             st2 = st2 + '%2'
             continue
         st2 = st2 + st1[i:i + 1]
+    return st2
+
+def fix_url2(st1):
+    st2 = "https://news.google.com"+st1[1:]
     return st2
 
 # def process_text(text):
