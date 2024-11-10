@@ -1,11 +1,10 @@
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI
 import time
 from Scraper import startScraping
 # from post_data import post_dataMain
 from fastapi.middleware.cors import CORSMiddleware
 # from bson import ObjectId
 import AI_API as ai
-from newsScraper import startScrapingNews
 
 app = FastAPI()
 

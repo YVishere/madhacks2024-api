@@ -1,6 +1,5 @@
 from bs4 import BeautifulSoup
 import httpx
-import numpy as np
 import re
 
 async def algorithm(subject):
