@@ -1,72 +1,44 @@
-import asyncio
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service as ChromeService
-from selenium.webdriver.chrome.options import Options
-from undetected_chromedriver import Chrome, ChromeOptions
+import requests
 from bs4 import BeautifulSoup
-import os
+import urllib.parse
 
-async def algorithm(subject, sub):
+# Function to fetch headlines using ScrapingBee API
+def algorithm(subject, sub, scrapingbee_url, api_key):
     toRet = []
-    loop = asyncio.get_event_loop()
     
-    # Set up Chrome options for headless mode
-    chrome_options = ChromeOptions()
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-dev-shm-usage")
+    # Prepare the URL for ScrapingBee API (headless Chrome)
+    url = f"{scrapingbee_url}/scrape?api_key={api_key}"
+    
+    # Prepare the payload (e.g., the URL you want to scrape)
+    payload = {
+        'url': subject,
+        'render': 'true',  # Use JavaScript rendering
+        'wait': '3',  # Wait for 3 seconds to allow content to load
+    }
 
-    # Initialize the WebDriver
-    driver = Chrome(options=chrome_options)
+    # Send a GET request to the ScrapingBee API
+    response = requests.get(url, params=payload)
 
-    try:
-        # Run the synchronous driver.get() in an executor
-        await loop.run_in_executor(None, driver.get, subject)
+    # Check if the request was successful
+    if response.status_code == 200:
+        html_content = response.text
+        soup = BeautifulSoup(html_content, "html.parser")
         
-        # Parse the page source with BeautifulSoup
-        soup = BeautifulSoup(driver.page_source, "html.parser")
-        
-        # Close the WebDriver
-        driver.close()
-        
-        # Find headlines
+        # Find headlines in the page
         headlines = soup.find_all('a', href=True)
         for head in headlines:
             headline = head.get_text()
             if sub.lower() in headline.lower():
                 toRet.append(headline)
-        
-        return toRet
-    except AttributeError:
-        return toRet
-    finally:
-        driver.quit()  # Ensure the driver is quit in case of an exception
 
+    return toRet
+
+# Function to fix URL for query string encoding
 def fix_url(st1):
-    st1 = st1
-    st2 = ""
-    for i in range(0, len(st1) - 1):
-        if st1[i:i + 1] == ' ':
-            st2 = st2 + '%2'
-            continue
-        st2 = st2 + st1[i:i + 1]
-    return st2
+    return urllib.parse.quote(st1)
 
-# def process_text(text):
-#     text = text.replace("\n", " ")
-#     text = text.replace("  ", " ")
-#     text = text.replace("\\\"", "\"")
-#     text = text.replace("ⓘ", "")
-#     text = text.replace("( )", "")
-#     text = text.replace("()", "")
-
-#     #Get rid of square brackets and anything inside them
-#     text = re.sub(r'\[.*?\]', '', text)
-#     text = ' '.join(text.split())
-#     return text
-
-async def startScrapingNews(subject):
-
+# Function to initiate the scraping process
+def start_scraping_news(subject, scrapingbee_url =  "https://app.scrapingbee.com", api_key="GB7RCI4D3JBI9GCCNGDOG5L2J5K3E0HVSOVW1UDIIWVZKTLGH067EYYULAJ4D4HASRHHDNXU268WWKNQ"):
     print("Start scraping", subject)
 
     subject = subject.strip()
@@ -77,6 +49,7 @@ async def startScrapingNews(subject):
     
     url = "https://news.google.com/search?q=" + subject
 
-    toRet = await algorithm(url, subject)
+    toRet = algorithm(url, subject, scrapingbee_url, api_key)
 
     return toRet
+
