@@ -24,33 +24,33 @@ async def scrape_view(subject: str):
         time_taken = time.time() - start_time
 
         # # Post data to MongoDB
-        document_id = await post_dataMain(subject, scraped_data)
+        # document_id = await post_dataMain(subject, scraped_data)
     except Exception as e:
         return {"error": str(e)}
 
-    return {'subject': subject, 'time_taken': time_taken, 'data': scraped_data, 'docID': str(document_id)}
+    return {'subject': subject, 'time_taken': time_taken, 'data': scraped_data}
 
-@app.websocket("/ws")
-async def websocket_endpoint(websocket: WebSocket):
-    await websocket.accept()
-    try:
-        while True:
-            #do nothing
-            await websocket.receive_text()
-    except WebSocketDisconnect:
-        # Handle disconnection
-        pass
+# @app.websocket("/ws")
+# async def websocket_endpoint(websocket: WebSocket):
+#     await websocket.accept()
+#     try:
+#         while True:
+#             #do nothing
+#             await websocket.receive_text()
+#     except WebSocketDisconnect:
+#         # Handle disconnection
+#         pass
 
-@app.websocket("/ws/{document_id}")
-async def websocket_endpoint_with_id(websocket: WebSocket, document_id: str):
-    await websocket.accept()
-    try:
-        while True:
-            #Do nothing
-            await websocket.receive_text()
-    except WebSocketDisconnect:
-        # Delete the document when the connection is closed
-        await delete_data(ObjectId(document_id))
+# @app.websocket("/ws/{document_id}")
+# async def websocket_endpoint_with_id(websocket: WebSocket, document_id: str):
+#     await websocket.accept()
+#     try:
+#         while True:
+#             #Do nothing
+#             await websocket.receive_text()
+#     except WebSocketDisconnect:
+#         # Delete the document when the connection is closed
+#         await delete_data(ObjectId(document_id))
 
 @app.get("/prompt")
 async def prompt_view(x: str):
