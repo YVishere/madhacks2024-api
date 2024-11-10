@@ -31,18 +31,15 @@ def fix_url(st1):
         st2 = st2 + st1[i:i + 1]
     return st2
 
-def fix_url2(st1):
-    st2 = "https://news.google.com" + st1[1:]
-    return st2
+def fix_sub(sub):
+    sub = sub.strip()
+    sub = sub.replace(" ", "%20")
+    return sub
 
 async def startScrapingNews(subject):
     print("Start scraping", subject)
 
     subject = subject.strip()
-
-    n = subject.find(' ')
-    if n != -1:
-        subject = fix_url2(subject)
     
     url = "https://www.nytimes.com/search?query=" + subject.lower()
 

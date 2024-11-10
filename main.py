@@ -5,6 +5,7 @@ from Scraper import startScraping
 from fastapi.middleware.cors import CORSMiddleware
 # from bson import ObjectId
 import AI_API as ai
+from newsScraper import fix_sub
 
 app = FastAPI()
 
@@ -72,6 +73,8 @@ async def conv_view(n: str):
     newsFlag = ["news", "article", "articles", "newspaper", "newspapers", "headlines", "headline", "news headlines", "news headline", "news articles", "news article", "news paper", "news papers"]
     if (len(str.split(n)) == 1):
         return prompt_view_init(n)
+    else:
+        n = fix_sub(n)
     for flag in newsFlag:
         if flag in n:
             return news_view(n)
