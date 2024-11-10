@@ -1,16 +1,44 @@
 import google.generativeai as genai
 import newsScraper as ns
-from Scraper import process_text
+import time
+from Scraper import process_text, startScraping
 
 genai.configure(api_key="AIzaSyD1KcB-Swnmj7bITFZ4Wbln6rmhS7w9L10")
 global model
 model = genai.GenerativeModel("gemini-1.5-flash")
 
+async def trainModel(x):
+    global model
+    output = await startScraping(x)
+    trimmed_response = ' '.join(output.text.split()[:500])
+    training_data = {
+        "input":x,
+        "output":trimmed_response
+    }
+    operation = genai.create_tuned_model(
+        display_name="fine_tuned_model",
+        source_model="models/gemini-1.5-flash-001-tuning",
+        epoch_count=20,
+        batch_size=4,
+        learning_rate=0.001,
+        training_data=training_data,
+    )
+    for status in operation.wait_bar():
+        time.sleep(10)  # Check the status every 10 seconds
+    
+    # Get the result of the tuning operation
+    result = operation.result()
+    print(result)
+    
+    # Replace the global model with the fine-tuned model
+    model = genai.GenerativeModel(model_name=result.name)
 
 def input_prompt(x):
     global model
     response = model.generate_content(x)
-    return(response.text)
+    toRet = process_text(response.text)
+    trainModel(x)
+    return(toRet)
 
 async def news_handler(x):
     global model
