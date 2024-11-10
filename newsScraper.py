@@ -2,7 +2,7 @@ import asyncio
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
+from undetected_chromedriver import Chrome, ChromeOptions
 from bs4 import BeautifulSoup
 import os
 
@@ -13,14 +13,13 @@ async def algorithm(subject, sub):
     os.environ["WD_MANAGER_PATH"] = "/tmp"
     
     # Set up Chrome options for headless mode
-    chrome_options = Options()
+    chrome_options = ChromeOptions()
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
 
     # Initialize the WebDriver
-    service = ChromeService(executable_path=ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=service, options=chrome_options)
+    driver = Chrome(options=chrome_options)
 
     try:
         # Run the synchronous driver.get() in an executor
