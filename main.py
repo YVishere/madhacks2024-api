@@ -1,4 +1,4 @@
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI
 import time
 from Scraper import startScraping
 # from post_data import post_dataMain, delete_data
