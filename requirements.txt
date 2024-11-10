@@ -4,6 +4,4 @@ httpx
 beautifulsoup4
 numpy
 pymongo
-motor
 google-generativeai
-selenium
