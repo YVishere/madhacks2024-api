@@ -24,7 +24,8 @@ async def scrape_view(subject: str):
         time_taken = time.time() - start_time
 
         # # Post data to MongoDB
-        document_id = await post_dataMain(subject, scraped_data)
+        # document_id = await post_dataMain(subject, scraped_data)
+        document_id = "123"
     except Exception as e:
         return {"error": str(e)}
 
