@@ -1,7 +1,7 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 import time
-from Scraper import startScraping, process_text
-from post_data import post_dataMain, delete_data
+from Scraper import startScraping
+# from post_data import post_dataMain, delete_data
 from fastapi.middleware.cors import CORSMiddleware
 from bson import ObjectId
 import AI_API as ai
@@ -57,7 +57,6 @@ async def prompt_view(x: str):
     x = "Tell me everything you know about " + x + " in 500 words."
     try:
         response = ai.input_prompt(x)
-        response = process_text(response)
     except Exception as e:
         return {"error": str(e)}
     
