@@ -4,10 +4,13 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
+import os
 
 async def algorithm(subject, sub):
     toRet = []
     loop = asyncio.get_event_loop()
+
+    os.environ["WD_MANAGER_PATH"] = "/tmp"
     
     # Set up Chrome options for headless mode
     chrome_options = Options()
