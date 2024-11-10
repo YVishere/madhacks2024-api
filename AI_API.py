@@ -14,7 +14,7 @@ async def news_handler(x):
     model = genai.GenerativeModel("gemini-1.5-flash")
     prompt = "Answer in only in one or two words: What is the subject of the sentence in " + x + "?. Do not add any quotes or punctuation. And the subject must be a place, person or a proper noun."
     response = model.generate_content(prompt)
-    articles = await ns.startScrapingNews(response.text)
+    articles = ns.startScrapingNews(response.text)
     s = ""
     for art in articles:
         s = s + art + ";; "
