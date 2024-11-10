@@ -5,6 +5,7 @@ from post_data import post_dataMain
 from fastapi.middleware.cors import CORSMiddleware
 # from bson import ObjectId
 import AI_API as ai
+from newsScraper import startScrapingNews
 
 app = FastAPI()
 
@@ -66,6 +67,17 @@ async def prompt_view(x: str):
 @app.get("/")
 def home_view():
     return "Hello world"
+
+@app.get("/news")
+async def news_view(n: str):
+    try:
+        start_time = time.time()
+        scraped_data = await startScrapingNews(n)
+        time_taken = time.time() - start_time
+    except Exception as e:
+        return {"error": str(e)}
+    
+    return {'subject': n, 'time_taken': time_taken, 'data': scraped_data}
 
 if __name__ == "__main__":
     import uvicorn
