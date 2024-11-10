@@ -38,7 +38,7 @@ def fix_url(st1):
     return urllib.parse.quote(st1)
 
 # Function to initiate the scraping process
-def start_scraping_news(subject, scrapingbee_url =  "https://app.scrapingbee.com", api_key="GB7RCI4D3JBI9GCCNGDOG5L2J5K3E0HVSOVW1UDIIWVZKTLGH067EYYULAJ4D4HASRHHDNXU268WWKNQ"):
+def startScrapingNews(subject, scrapingbee_url =  "https://app.scrapingbee.com", api_key="GB7RCI4D3JBI9GCCNGDOG5L2J5K3E0HVSOVW1UDIIWVZKTLGH067EYYULAJ4D4HASRHHDNXU268WWKNQ"):
     print("Start scraping", subject)
 
     subject = subject.strip()
