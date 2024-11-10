@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import httpx
 import numpy as np
+import re
 
 async def algorithm(subject):
     toRet = ""
@@ -25,6 +26,15 @@ def fix_url(st1):
         st2 = st2 + st1[i:i + 1]
     return st2
 
+def process_text(text):
+    text = text.replace("\n", " ")
+    text = text.replace("  ", " ")
+
+    #Get rid of square brackets and anything inside them
+    text = re.sub(r'\[.*?\]', '', text)
+    text = ' '.join(text.split())
+    return text
+
 async def startScraping(subject):
 
     print("Start scraping", subject)
@@ -33,13 +43,12 @@ async def startScraping(subject):
     if not n == -1:
         subject = fix_url(subject)
 
-    enable_fArray = True
-
     if subject.find("https:") != -1:
         url = subject
-        enable_fArray = False
     else:    url = "https://en.wikipedia.org/wiki/" + subject
 
     toRet = await algorithm(url)
+
+    toRet = process_text(toRet)
 
     return toRet
