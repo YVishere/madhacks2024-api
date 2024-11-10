@@ -19,7 +19,7 @@ async def algorithm(subject, sub):
     chrome_options.add_argument("--disable-dev-shm-usage")
 
     # Initialize the WebDriver
-    service = ChromeService(executable_path=ChromeDriverManager(path="/tmp").install())
+    service = ChromeService(executable_path=ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=chrome_options)
 
     try:
