@@ -1,26 +1,25 @@
 import httpx
 from bs4 import BeautifulSoup
+import httpx
+import numpy as np
 
-async def algorithm(subject, sub):
+async def algorithm(subject):
     toRet = []
-    
-    # Send a GET request to the URL
     async with httpx.AsyncClient() as client:
-        response = await client.get(subject)
-        # Parse the page source with BeautifulSoup
-        soup = BeautifulSoup(response.text, "html.parser")
-        
-        # Find headlines
-        tags = soup.find(id="site-content").find_all("a",href=True)
-        print(tags)
-        for head in tags:
-            h = head.find("h4")
-            if h:
-                headline = h.get_text()
-                toRet.append(headline)
+        try:
+            response = await client.get(subject)
+            soup = BeautifulSoup(response.text, "html.parser")
+            sites = soup.find_all("a", href=True)
+            for s in sites:
+                nresp = await client.get(s['href'])
+                nsoup = BeautifulSoup(fix_url2(nresp.text), "html.parser")
+                ns = nsoup.find_all("h1")
+                toRet = toRet.append(ns)
+            return toRet
+        except AttributeError:
+            return toRet
 
-    return toRet
-
+# Function to fix URL for query string encoding
 def fix_url(st1):
     st1 = st1
     st2 = ""
@@ -32,10 +31,24 @@ def fix_url(st1):
     return st2
 
 def fix_url2(st1):
-    st2 = "https://news.google.com" + st1[1:]
+    st2 = "https://news.google.com"+st1[1:]
     return st2
 
+# def process_text(text):
+#     text = text.replace("\n", " ")
+#     text = text.replace("  ", " ")
+#     text = text.replace("\\\"", "\"")
+#     text = text.replace("ⓘ", "")
+#     text = text.replace("( )", "")
+#     text = text.replace("()", "")
+
+#     #Get rid of square brackets and anything inside them
+#     text = re.sub(r'\[.*?\]', '', text)
+#     text = ' '.join(text.split())
+#     return text
+
 async def startScrapingNews(subject):
+
     print("Start scraping", subject)
 
     subject = subject.strip()
@@ -44,8 +57,9 @@ async def startScrapingNews(subject):
     if n != -1:
         subject = fix_url2(subject)
     
-    url = "https://www.nytimes.com/search?query=" + subject.lower()
+    url = "news.google.com/search?q=" + subject
 
-    toRet = await algorithm(url, subject)
+    toRet = await algorithm(url)
 
     return toRet
+
