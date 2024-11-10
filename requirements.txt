@@ -9,3 +9,4 @@ google-generativeai
 selenium
 webdriver_manager
 undetected-chromedriver
+distutils

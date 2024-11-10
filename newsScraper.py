@@ -9,8 +9,6 @@ import os
 async def algorithm(subject, sub):
     toRet = []
     loop = asyncio.get_event_loop()
-
-    os.environ["WD_MANAGER_PATH"] = "/tmp"
     
     # Set up Chrome options for headless mode
     chrome_options = ChromeOptions()
