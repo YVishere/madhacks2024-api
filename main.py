@@ -71,14 +71,14 @@ def home_view():
 @app.get("/conv")
 async def conv_view(n: str):
     newsFlag = ["news", "article", "articles", "newspaper", "newspapers", "headlines", "headline", "news headlines", "news headline", "news articles", "news article", "news paper", "news papers"]
-    if (len(str.split(n)) == 1):
+    if (len(n.split()) == 1):
         return prompt_view_init(n)
     for flag in newsFlag:
         if flag in n:
             n = fix_sub(n)
             return news_view(n)
     try:
-        response = await ai.news_handler(n)
+        response = await ai.input_prompt(n)
     except Exception as e:
         return {"error": str(e)}
     
