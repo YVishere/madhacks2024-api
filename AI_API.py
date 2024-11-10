@@ -10,6 +10,8 @@ model = genai.GenerativeModel("gemini-1.5-flash")
 async def trainModel(x):
     global model
     output = await startScraping(x)
+    if output == "": #Nothing to train on
+        return
     trimmed_response = ' '.join(output.text.split()[:500])
     training_data = {
         "input":x,
