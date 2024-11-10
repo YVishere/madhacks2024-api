@@ -29,6 +29,7 @@ def fix_url(st1):
 def process_text(text):
     text = text.replace("\n", " ")
     text = text.replace("  ", " ")
+    text = text.replace("\\\"", "\"")
 
     #Get rid of square brackets and anything inside them
     text = re.sub(r'\[.*?\]', '', text)
