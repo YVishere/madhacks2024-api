@@ -93,7 +93,7 @@ async def news_view(n: str):
     except Exception as e:
         return {"error": str(e)}
     
-    return {'subject': n, 'time_taken': time_taken, 'data': scraped_data}
+    return {'subject': n, 'time_taken': time_taken, 'response': scraped_data}
 
 if __name__ == "__main__":
     import uvicorn
